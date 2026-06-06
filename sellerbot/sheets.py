@@ -24,6 +24,7 @@ ORDER_HEADERS = [
     "TransactionNo",
 ]
 MIN_WORKSHEET_COLS = 8
+# Google Sheets API uses 1-indexed column coordinates, where F == 6.
 ORDER_STATUS_COLUMN = 6
 
 

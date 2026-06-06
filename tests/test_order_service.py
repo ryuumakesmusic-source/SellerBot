@@ -102,6 +102,8 @@ class TestOrderService(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(successes), 1)
         self.assertEqual(len(failures), 1)
         self.assertIsInstance(failures[0], OrderNotAwaitingReviewError)
+        self.assertEqual(successes[0][0].order_id, "o2")
+        self.assertEqual(successes[0][1], "KEY-1")
         self.assertEqual(repo.stock["p1"], ["KEY-2"])
 
     async def test_approve_fails_when_no_stock(self):
