@@ -24,6 +24,7 @@ ORDER_HEADERS = [
     "TransactionNo",
 ]
 MIN_WORKSHEET_COLS = 8
+ORDER_STATUS_COLUMN = 6
 
 
 class GoogleSheetsRepository:
@@ -131,7 +132,7 @@ class GoogleSheetsRepository:
         values = await asyncio.to_thread(ws.get_all_values)
         for idx, row in enumerate(values[1:], start=2):
             if len(row) > 0 and row[0].strip() == order_id:
-                await asyncio.to_thread(ws.update_cell, idx, 6, status.value)
+                await asyncio.to_thread(ws.update_cell, idx, ORDER_STATUS_COLUMN, status.value)
                 break
 
     async def pop_first_stock_item(self, product_id: str) -> str | None:

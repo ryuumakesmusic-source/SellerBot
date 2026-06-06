@@ -11,6 +11,7 @@ from sellerbot.repository import StoreRepository
 from sellerbot.services.order_service import OrderService
 
 MIN_TRANSACTION_NO_LENGTH = 3
+MAX_DISPLAYED_ORDERS = 20
 
 
 class CheckoutStates(StatesGroup):
@@ -70,7 +71,7 @@ def build_customer_router(repository: StoreRepository, order_service: OrderServi
 
         text = "📦 *Your Orders*\n" + "\n".join(
             f"`{o.order_id[:8]}` • Product `{o.product_id}` • `{o.amount} MMK` • *{o.status.value}*"
-            for o in orders[:20]
+            for o in orders[:MAX_DISPLAYED_ORDERS]
         )
         await callback.message.edit_text(text, parse_mode="Markdown", reply_markup=main_menu_keyboard())
         await callback.answer()
