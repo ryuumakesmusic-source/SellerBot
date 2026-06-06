@@ -10,6 +10,8 @@ from sellerbot.keyboards import admin_order_keyboard, main_menu_keyboard, produc
 from sellerbot.repository import StoreRepository
 from sellerbot.services.order_service import OrderService
 
+MIN_TRANSACTION_NO_LENGTH = 3
+
 
 class CheckoutStates(StatesGroup):
     waiting_transaction_no = State()
@@ -100,7 +102,7 @@ def build_customer_router(repository: StoreRepository, order_service: OrderServi
     @router.message(CheckoutStates.waiting_transaction_no)
     async def receive_tx(message: Message, state: FSMContext):
         tx_no = (message.text or "").strip()
-        if len(tx_no) < 3:
+        if len(tx_no) < MIN_TRANSACTION_NO_LENGTH:
             await message.answer("⚠️ Please enter a valid transaction number.")
             return
         await state.update_data(transaction_no=tx_no)

@@ -23,6 +23,7 @@ ORDER_HEADERS = [
     "Date",
     "TransactionNo",
 ]
+MIN_WORKSHEET_COLS = 8
 
 
 class GoogleSheetsRepository:
@@ -62,7 +63,7 @@ class GoogleSheetsRepository:
         try:
             ws = spreadsheet.worksheet(title)
         except gspread.WorksheetNotFound:
-            ws = spreadsheet.add_worksheet(title=title, rows=1000, cols=max(8, len(tuple(headers))))
+            ws = spreadsheet.add_worksheet(title=title, rows=1000, cols=max(MIN_WORKSHEET_COLS, len(tuple(headers))))
         first_row = ws.row_values(1)
         if first_row != list(headers):
             ws.update("A1", [list(headers)])
@@ -78,9 +79,8 @@ class GoogleSheetsRepository:
         for row in records:
             if not row.get("ProductID"):
                 continue
-            try:
-                price = int(row.get("PriceMMK", 0))
-            except (TypeError, ValueError):
+            price = self._parse_int_field(row.get("PriceMMK"), default=-1)
+            if price < 0:
                 continue
             products.append(
                 Product(
@@ -199,11 +199,18 @@ class GoogleSheetsRepository:
 
         return Order(
             order_id=str(row.get("OrderID", "")).strip(),
-            user_id=int(str(row.get("UserID", "0")).strip() or 0),
+            user_id=self._parse_int_field(row.get("UserID"), default=0),
             username=str(row.get("Username", "")).strip(),
             product_id=str(row.get("ProductID", "")).strip(),
-            amount=int(str(row.get("Amount", "0")).strip() or 0),
+            amount=self._parse_int_field(row.get("Amount"), default=0),
             status=status,
             date=created,
             transaction_no=str(row.get("TransactionNo", "")).strip(),
         )
+
+    @staticmethod
+    def _parse_int_field(value: Any, default: int = 0) -> int:
+        try:
+            return int(str(value).strip())
+        except (TypeError, ValueError):
+            return default
