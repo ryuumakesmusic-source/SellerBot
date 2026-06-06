@@ -20,18 +20,39 @@ Telegram Digital Product Store Bot (Python + Aiogram) with manual MMK payment fl
 - Broadcast messages to all customers
 
 ## Google Sheets Setup
-Create one spreadsheet with these sheets and headers:
+Create one spreadsheet with one tab per table. Keep row 1 as headers, one row per record, no merged cells, and no blank header names.
+
+### `Users`
+`id | telegram_user_id | username | display_name | status | created_at | updated_at`
 
 ### `Products`
-`ProductID | ProductName | PriceMMK`
+`id | name | price_mmk | status | created_at | updated_at`
 
-### `Stock`
-`ProductID | StockData`
+### `StockItems`
+`id | product_id | stock_data | status | created_at | updated_at`
 
 ### `Orders`
-`OrderID | UserID | Username | ProductID | Amount | Status | Date | TransactionNo`
+`id | user_id | username | product_id | amount_mmk | transaction_no | status | created_at | updated_at`
 
-> Admin can add stock by pasting new rows in `Stock`. Bot reads live data so stock count updates automatically.
+### `OrderItems`
+`id | order_id | product_id | stock_item_id | delivered_data | status | created_at | updated_at`
+
+### `StatusLookup`
+`entity | status | description`
+
+### `Reports` (optional query/read tab)
+`metric | value | updated_at`
+
+Recommended status values:
+- `Users.status`: `active`, `blocked`
+- `Products.status`: `active`, `inactive`
+- `StockItems.status`: `available`, `consumed`
+- `Orders.status`: `awaiting_review`, `approved`, `rejected`
+- `OrderItems.status`: `delivered`
+
+Use Google Sheets dropdown validation for all `status` columns and point them to values in `StatusLookup` to keep enums consistent.
+
+> Admin can add stock by pasting new rows in `StockItems`. Bot reads live data so stock count updates automatically.
 
 ## Installation Guide
 
