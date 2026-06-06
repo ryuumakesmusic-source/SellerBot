@@ -54,6 +54,11 @@ Use Google Sheets dropdown validation for all `status` columns and point them to
 
 > Admin can add stock by pasting new rows in `StockItems`. Bot reads live data so stock count updates automatically.
 
+### Demo Sheet Template (ready to upload)
+
+- File: `/tmp/workspace/ryuumakesmusic-source/SellerBot/examples/SellerBot_Google_Sheets_Demo.xlsx`
+- Upload this file to Google Drive, open it with Google Sheets, then copy tabs into your real spreadsheet or use it directly for testing.
+
 ## Installation Guide
 
 1. **Clone and enter project**
